@@ -20,6 +20,11 @@ class Journey
   end
 
   def fare
-    complete_journey? ? Oystercard::MIN_CHARGE : Oystercard::PENALTY_FARE
+    complete_journey? ? calculate_fare : Oystercard::PENALTY_FARE
+  end
+
+  def calculate_fare
+    fare = @journey[:entry_station].zone - @journey[:exit_station].zone
+    fare.abs + Oystercard::MIN_CHARGE
   end
 end

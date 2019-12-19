@@ -17,17 +17,18 @@ class Oystercard
   end
 
   def top_up(money)
-    raise "Maximum limit of #{MAX_CAP} reached" if (@balance + money) > MAX_CAP
+    raise "Cannot exceed #{MAX_CAP} balance" if (@balance + money) > MAX_CAP
 
     @balance += money
   end
 
   def touch_in(station)
     if in_journey?
-      puts "Penalty fare deducted"
       deduct(PENALTY_FARE)
+      @logger.reset
+      puts 'Penalty fare deducted'
     end
-    raise 'Insufficent funds' if @balance < MIN_CHARGE
+    raise 'Insufficent funds. Please top up' if @balance < MIN_CHARGE
 
     @logger.start(station)
   end
