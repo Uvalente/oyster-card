@@ -5,31 +5,21 @@ class Journey
 
   def initialize
     @journey = {}
-    @journey_history = []
   end
 
   def set_entry(station)
-    @journey[:entrance_station] = station
-  end
-
-  def in_journey?
-    @journey.any?
+    @journey[:entry_station] = station
   end
 
   def set_exit(station)
     @journey[:exit_station] = station
-    @journey_history << @journey
   end
 
   def complete_journey?
-    @journey.key?(:entrance_station) && @journey.key?(:exit_station)
+    @journey.key?(:entry_station) && @journey.key?(:exit_station)
   end
 
   def fare
     complete_journey? ? Oystercard::MIN_CHARGE : Oystercard::PENALTY_FARE
-  end
-
-  def reset_journey
-    @journey = {}
   end
 end

@@ -2,6 +2,7 @@
 
 require_relative 'station'
 require_relative 'journey'
+require_relative 'journey-log'
 
 class Oystercard
   attr_reader :journey, :balance
@@ -10,9 +11,9 @@ class Oystercard
   MIN_CHARGE = 1
   PENALTY_FARE = 6
 
-  def initialize(journey = Journey.new)
+  def initialize(logger = JourneyLog.new)
     @balance = 0
-    @journey = journey
+    @logger = logger
   end
 
   def top_up(money)
@@ -22,20 +23,21 @@ class Oystercard
   end
 
   def touch_in(station)
-    # touch in penalty if journey not empty
-    raise 'insufficent funds' if @balance < MIN_CHARGE
+    if in_journey?
+      puts "Penalty fare deducted"
+      deduct(PENALTY_FARE)
+    end
+    raise 'Insufficent funds' if @balance < MIN_CHARGE
 
-    journey.set_entry(station)
+    @logger.start(station)
   end
 
   def in_journey?
-    journey.in_journey?
+    @logger.in_journey?
   end
 
   def touch_out(station)
-    deduct(journey.fare)
-    journey.set_exit(station)
-    journey.reset_journey
+    deduct(@logger.finish(station))
   end
 
   private

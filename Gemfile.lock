@@ -35,7 +35,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rspec (~> 3.9)
+  rspec
   simplecov
   simplecov-console
 
