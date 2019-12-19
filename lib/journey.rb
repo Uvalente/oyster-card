@@ -1,5 +1,6 @@
-class Journey
+# frozen_string_literal: true
 
+class Journey
   attr_reader :journey, :journey_history
 
   def initialize
@@ -21,7 +22,7 @@ class Journey
   end
 
   def complete_journey?
-    @journey.key?(:entrance_station) && @journey.key?(:exit_station) 
+    @journey.key?(:entrance_station) && @journey.key?(:exit_station)
   end
 
   def fare

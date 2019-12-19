@@ -1,16 +1,14 @@
+# frozen_string_literal: true
+
 require_relative 'station'
 require_relative 'journey'
 
 class Oystercard
-
-  attr_accessor :balance
-  attr_reader :deduct, :journey
-  
+  attr_reader :journey, :balance
 
   MAX_CAP = 90
   MIN_CHARGE = 1
   PENALTY_FARE = 6
-
 
   def initialize(journey = Journey.new)
     @balance = 0
@@ -18,12 +16,15 @@ class Oystercard
   end
 
   def top_up(money)
-    fail "Maximum limit of #{MAX_CAP} reached" if (@balance + money) > MAX_CAP
+    raise "Maximum limit of #{MAX_CAP} reached" if (@balance + money) > MAX_CAP
+
     @balance += money
   end
 
   def touch_in(station)
-    fail "insufficent funds" if @balance < MIN_CHARGE
+    # touch in penalty if journey not empty
+    raise 'insufficent funds' if @balance < MIN_CHARGE
+
     journey.set_entry(station)
   end
 
@@ -36,11 +37,10 @@ class Oystercard
     journey.set_exit(station)
     journey.reset_journey
   end
-  
+
   private
 
   def deduct(fare)
     @balance -= fare
   end
-
 end
